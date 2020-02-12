@@ -12,7 +12,7 @@ A maintenance workflow that you can deploy into Airflow to periodically clean ou
 
        a. Here's a fast way:
 
-                $ wget https://raw.githubusercontent.com/teamclairvoyant/airflow-utils/master/dags/directory-cleanup.py
+                $ wget https://github.com/teamclairvoyant/airflow-utils/blob/master/dags/directory-cleanup.py
         
 4. Update the global variables (SCHEDULE_INTERVAL, DAG_OWNER_NAME, ALERT_EMAIL_ADDRESSES, ENABLE_DELETE, etc.) in the DAG with the desired values
 
