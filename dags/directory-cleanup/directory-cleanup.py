@@ -25,8 +25,8 @@ DAG_OWNER_NAME = "operations"           # Who is listed as the owner of this DAG
 ALERT_EMAIL_ADDRESSES = []              # List of email address to send email alerts to if this job fails
 DEFAULT_MAX_FILE_AGE_IN_DAYS = int(Variable.get("airflow_max_file_age_in_days", 180)) # Length to retain the log files if not already provided in the conf. If this is set to 30, the job will remove those files that are 30 days old or older.
 ENABLE_DELETE = True                    # Whether the job should delete the db entries or not. Included if you want to temporarily avoid deleting the db entries.
-HDFS_DIR = ['/exercise1/t0','/exercise1/t0'] # List of absolute HDFS paths to remove data from
-LOCAL_DIR = ['/home/cloudera/Desktop/cleanupTest','/home/cloudera/Desktop/cleanupTest1'] # List of absolute local paths to remove data from
+HDFS_DIR = ['/dir1/subdir1','/dir1/subdir2'] # List of absolute HDFS paths to remove data from
+LOCAL_DIR = ['/home/user/tmp'] # List of absolute local paths to remove data from
 
 
 default_args = {
