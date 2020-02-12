@@ -23,8 +23,8 @@ START_DATE = datetime.now() - timedelta(minutes=1)
 SCHEDULE_INTERVAL = "@daily"            # How often to Run. @daily - Once a day at Midnight (UTC)
 DAG_OWNER_NAME = "operations"           # Who is listed as the owner of this DAG in the Airflow Web Server
 ALERT_EMAIL_ADDRESSES = []              # List of email address to send email alerts to if this job fails
-DEFAULT_MAX_FILE_AGE_IN_DAYS = int(Variable.get("airflow_max_file_age_in_days", 180)) # Length to retain the log files if not already provided in the conf. If this is set to 30, the job will remove those files that are 30 days old or older.
-ENABLE_DELETE = True                    # Whether the job should delete the db entries or not. Included if you want to temporarily avoid deleting the db entries.
+DEFAULT_MAX_FILE_AGE_IN_DAYS = int(Variable.get("directory_cleanup__max_file_age_in_days", 180)) # Length to retain the log files if not already provided in the conf. If this is set to 30, the job will remove those files that are 30 days old or older.
+ENABLE_DELETE = False                    # Whether the job should delete the db entries or not. Included if you want to temporarily avoid deleting the db entries.
 HDFS_DIR = ['/dir1/subdir1','/dir1/subdir2'] # List of absolute HDFS paths to remove data from
 LOCAL_DIR = ['/home/user/tmp'] # List of absolute local paths to remove data from
 
@@ -76,7 +76,7 @@ if [ $? == 0 ]; then
                 exit 1
             fi
         else
-            echo "$filePath"
+            echo "$dir_date $filePath"
         fi
     fi
 
@@ -98,14 +98,14 @@ echo  " "
 if [ -d {{ params.DIRECTORY }} ]; then
     if [ {{ params.ENABLE_DELETE }} == "True" ]; then
         echo "Deleted the following files:"
-        find {{ params.DIRECTORY }} -type f -mtime +{{ params.MAX_DAYS }} -print -exec rm -f {} \;
+        find {{ params.DIRECTORY }} -type f -mtime +{{ params.MAX_DAYS }} -printf "%TY-%Tm-%Td %p\n" -exec rm -f {} \;
         if [ $? != 0 ]; then
             echo "Error deleting files in {{ params.DIRECTORY }}. Check the permissions and try again."
             exit 1
         fi
     else
         echo "The following files would've been deleted if ENABLE_DELETE was True:"
-        find {{ params.DIRECTORY }} -type f -mtime +{{ params.MAX_DAYS }} -print;
+        find {{ params.DIRECTORY }} -type f -mtime +{{ params.MAX_DAYS }} -printf "%TY-%Tm-%Td %p\n";
     fi
 else
     echo "The directory {{ params.DIRECTORY }} DOES NOT exists."
